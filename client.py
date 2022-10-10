@@ -6,7 +6,7 @@ SWARM_ID = str(input("Enter Swarm id : "))
 AGENT_ID= int(input("Enter Agent ID : "))
 BUFF_SIZE = 1024
 HOST = socket.gethostname()
-PORT = 34544
+PORT = 3454
 
 class Client:
     def __init__(self):
@@ -37,7 +37,10 @@ class Client:
 
     def  connection_handler(self):
         while True:
-            msg = input("You ---- : ")
+            print("0 - to view cases and their Order")
+            print("1X - request to add a suggestion to case X")
+            print("2X - to view the current step in suggestion state in case X")
+            msg = input("You ---- ")
             self.sock.send(msg.encode('utf-8'))
             data = self.sock.recv(BUFF_SIZE).decode('utf-8')
             print(data)

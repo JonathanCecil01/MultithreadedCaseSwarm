@@ -1,60 +1,6 @@
-#
-# import socket
-# from _thread import *
-#
-# # create a socket object
-# serversocket = socket.socket( socket.AF_INET, socket.SOCK_STREAM)
-#
-# # get local machine name
-# host = socket.gethostname()
-#
-# port = 9991
-#
-#
-# # bind to the port
-# serversocket.bind((host, port))
-#
-# # queue up to 5 requests
-# serversocket.listen(5)
-# print("Server Waiting for connection")
-# id = 0
-# messages = []
-# clients = ()
-# clients = tuple(clients)
-# def client_thread(conn):
-#     global id, pos
-#     conn.send(str(id).encode())
-#     id = 1
-#     reply= ' '
-#     while True:
-#         data= conn.recv(1024)
-#         reply = data.decode('ascii')
-#         messages.append(reply)
-#         reply2 = str(messages)
-#         if not data:
-#             conn.send(str.encode('No data '))
-#             break
-#         else:
-#             print("Recieved: "+reply)
-#         conn.sendall(str.encode(reply2))
-#     print("Connection closed for the Thread")
-#     conn.close()
-#
-#
-#
-# while True:
-#     conn, addr = serversocket.accept()
-#     print("Connected to : ", addr)
-#     start_new_thread(client_thread, (conn, ))
-
-
-
-
 
 import socket
 import threading
-from _thread import *
-import sys
 import time
 from case import *
 
@@ -62,10 +8,10 @@ from case import *
 SWARM_ID = str(input("Enter Swarm id : "))
 AGENT_COUNT = int(input("Enter the no of agents in the swarm : "))
 BUFF_SIZE = 1024
-
+FINALISE_COUNT =0
 CHOICE_MESSAGE = ""
 
-PORT = 34544
+PORT = 3454
 
 lock = threading.Lock()
 
@@ -106,21 +52,38 @@ class Server:
                 temp_step.step_id = 'step...id'
                 temp_step.case_id = str(case_numbr)
                 temp_step.data = data[2:]
-
-                self.cases[case_numbr].final_step.add_suggestion(temp_step)
+                self.cases[case_numbr].add_suggestion(temp_step)
                 print("Suggestion appended succesfully ")
                 conn.send("Suggestion appended succesfully ".encode('utf-8'))
             elif data[0] == '2': #view steps
                 print("request to view step suggestions")
                 case_numbr = int(data[1])
-                conn.send(str(self.cases[case_numbr].final_step.suggestions).encode('utf-8'))
+                conn.send(str(self.cases[case_numbr].display_step_in_choice()).encode('utf-8'))
+
+            elif data[0] == '3':
+                print("Request to increase pheromone strength")
+                case_numbr = int(data[1])
+                sugg_numbr = int(data[2])
+                self.cases[case_numbr].final_step.suggestions[sugg_numbr].increase_pheromone_level()
+                reply = "Pheromone strength of Suggestion : "+str(sugg_numbr)+" increased"
+                conn.send(reply.encode('utf-8'))
+
+            elif data[0] == '4':
+                print("Option to Finalise")
+                case_numbr = int(data[1])
+                global FINALISE_COUNT
+                FINALISE_COUNT+=1
+                if FINALISE_COUNT==AGENT_COUNT:
+                    self.cases[case_numbr].final_step.finalise_step()
+                    reply = "Step finalised ...."
+                    reply += "Solution set : "+str(self.cases[case_numbr].solution)
+                    conn.send(reply.encode())
+                else:
+                    reply = "Not enough requests from the agents to finalise"
+                    conn.send(reply.encode())
 
 
 
-
-            # print("Recieved ",data, " from ", conn)
-            # self.steps.append(data)
-            # conn.send(str(self.steps).encode('utf-8'))
             time.sleep(0.1)
 
     def listener(self):

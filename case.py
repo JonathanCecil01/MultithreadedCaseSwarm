@@ -50,12 +50,29 @@ class Case:
         self.case_id = ''
         self.solution = []
         self.final_step = Final_Step()
+        self.final_step.case_id = self.case_id
+        self.final_step.step_id = 0
 
     def finalise_solution_step(self):
         decided_step = self.final_step.finalise_step()
         self.solution.append(Final_Step)
-        self.final_step = Final_Step()
+        self.final_step.step_id +=1
+        self.final_step.suggestions = []
+
+    def add_suggestion(self, Step):
+        self.final_step.add_suggestion(Step)
+        return
+
+    def display_step_in_choice(self):
+        count =0
+        reply = "Case ID : "+str(self.case_id)+" Step ID : "+str(self.final_step.step_id)+" Suggestions\n"
+        for i in self.final_step.suggestions:
+            reply+="Suggestion "+str(count)+" : "+str(i.data)+"\n"
+            reply+="Pheromone Strength : "+str(i.pheromone_level)+"\n"
+            count+=1
+        return reply
 
     def display_solution(self):
         for i in range(len(self.solution)):
             print("Step ", i, " : ", self.solution[i])
+
