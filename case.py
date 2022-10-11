@@ -52,6 +52,7 @@ class Case:
         self.final_step = Final_Step()
         self.final_step.case_id = self.case_id
         self.final_step.step_id = 0
+        self.finalise_count =0
 
     def finalise_solution_step(self):
         decided_step = self.final_step.finalise_step()

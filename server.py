@@ -8,10 +8,9 @@ from case import *
 SWARM_ID = str(input("Enter Swarm id : "))
 AGENT_COUNT = int(input("Enter the no of agents in the swarm : "))
 BUFF_SIZE = 1024
-FINALISE_COUNT =0
 CHOICE_MESSAGE = ""
-
-PORT = 34544
+global FINALISE_COUNT
+PORT = 3454
 
 lock = threading.Lock()
 
@@ -71,10 +70,9 @@ class Server:
             elif data[0] == '4':
                 print("Option to Finalise")
                 case_numbr = int(data[1])
-                global FINALISE_COUNT
-                FINALISE_COUNT+=1
-                if FINALISE_COUNT==AGENT_COUNT:
-                    self.cases[case_numbr].final_step.finalise_step()
+                self.cases[case_numbr].finalise_count+=1
+                if self.cases[case_numbr].finalise_count==AGENT_COUNT:
+                    self.cases[case_numbr].finalise_solution_step()
                     reply = "Step finalised ...."
                     reply += "Solution set : "+str(self.cases[case_numbr].solution)
                     conn.send(reply.encode())

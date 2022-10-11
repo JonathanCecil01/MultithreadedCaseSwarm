@@ -6,7 +6,7 @@ SWARM_ID = str(input("Enter Swarm id : "))
 AGENT_ID= int(input("Enter Agent ID : "))
 BUFF_SIZE = 1024
 HOST = socket.gethostname()
-PORT = 34544
+PORT = 3454
 
 class Client:
     def __init__(self):
