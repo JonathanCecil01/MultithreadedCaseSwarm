@@ -76,6 +76,8 @@ class Server:
                     reply = "Step finalised ...."
                     reply += "Solution set : "+str(self.cases[case_numbr].solution)
                     conn.send(reply.encode())
+                    self.cases[case_numbr].finalise_count = 0
+                    print("Step Finalised successfully")
                 else:
                     reply = "Not enough requests from the agents to finalise"
                     conn.send(reply.encode())
