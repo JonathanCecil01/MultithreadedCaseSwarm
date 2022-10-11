@@ -1,3 +1,5 @@
+EVAPORATION_FACTOR = 0.02
+
 
 class Final_Step:
     def __init__(self):
@@ -24,7 +26,7 @@ class Step:
         self.case_id = ''
         self.step_id = ''
         self.suggestion_id = ''
-        self.pheromone_level = 0
+        self.pheromone_level = 10
         self.data = ''
 
     def set_step(self, case_id, step_id):
@@ -40,7 +42,9 @@ class Step:
         print("Pheromone strength : ", self.pheromone_level)
 
     def evaporation(self):
-        self.pheromone_level-=2
+        if self.pheromone_level ==0:
+            return 
+        self.pheromone_level-=self.pheromone_level*EVAPORATION_FACTOR
 
 
 
@@ -56,7 +60,7 @@ class Case:
 
     def finalise_solution_step(self):
         decided_step = self.final_step.finalise_step()
-        self.solution.append(Final_Step)
+        self.solution.append(decided_step)
         self.final_step.step_id +=1
         self.final_step.suggestions = []
 
@@ -72,8 +76,19 @@ class Case:
             reply+="Pheromone Strength : "+str(i.pheromone_level)+"\n"
             count+=1
         return reply
+    
+    def evaporate(self):
+        for i in self.final_step.suggestions:
+            i.evaporation()
 
     def display_solution(self):
-        for i in range(len(self.solution)):
-            print("Step ", i, " : ", self.solution[i])
+        reply = "\n----CASE "+str(self.case_id)+"--------\n"
+        for i in self.solution:
+            reply+="Step "+str(i)+" : "+str(i.data)+"\n"
+            reply+="Pheromone Strength : "+str(i.pheromone_level)+"\n"
+        return reply
 
+    def display_case(self):
+        reply = "\n----------------------\n"
+        reply+= "-------Case ID : "+str(self.case_id)+"-------\n"
+        return reply

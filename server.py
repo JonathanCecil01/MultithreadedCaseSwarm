@@ -11,7 +11,6 @@ BUFF_SIZE = 1024
 CHOICE_MESSAGE = ""
 global FINALISE_COUNT
 PORT = 3454
-
 lock = threading.Lock()
 
 class Server:
@@ -38,9 +37,17 @@ class Server:
         while True:
             data = conn.recv(BUFF_SIZE).decode('utf-8')
 
+            #Evaporation of pheromone level
+            for i in self.cases:
+                i.evaporate()
+
             if data[0] == '0': #view the cases
                 print("Request to view cases")
-                conn.send(str(self.cases).encode('utf-8'))
+                reply = "\n------All Cases----------\n"
+                for i in self.cases:
+                    reply+=i.display_case()
+                
+                
 
             elif data[0] == '1': #add suggestion
                 print("request to add a suggestional step")
@@ -52,12 +59,15 @@ class Server:
                 temp_step.case_id = str(case_numbr)
                 temp_step.data = data[2:]
                 self.cases[case_numbr].add_suggestion(temp_step)
-                print("Suggestion appended succesfully ")
-                conn.send("Suggestion appended succesfully ".encode('utf-8'))
+                reply = "Suggestion appended succesfully "
+                print(reply)
+                
             elif data[0] == '2': #view steps
                 print("request to view step suggestions")
                 case_numbr = int(data[1])
-                conn.send(str(self.cases[case_numbr].display_step_in_choice()).encode('utf-8'))
+                reply = str(self.cases[case_numbr].display_step_in_choice())
+                
+                #conn.send(reply.encode('utf-8'))
 
             elif data[0] == '3':
                 print("Request to increase pheromone strength")
@@ -65,7 +75,8 @@ class Server:
                 sugg_numbr = int(data[2])
                 self.cases[case_numbr].final_step.suggestions[sugg_numbr].increase_pheromone_level()
                 reply = "Pheromone strength of Suggestion : "+str(sugg_numbr)+" increased"
-                conn.send(reply.encode('utf-8'))
+                
+                #conn.send(reply.encode('utf-8'))
 
             elif data[0] == '4':
                 print("Option to Finalise")
@@ -75,17 +86,24 @@ class Server:
                     self.cases[case_numbr].finalise_solution_step()
                     reply = "Step finalised ...."
                     reply += "Solution set : "+str(self.cases[case_numbr].solution)
-                    conn.send(reply.encode())
+                    #conn.send(reply.encode())
                     self.cases[case_numbr].finalise_count = 0
                     print("Step Finalised successfully")
                 else:
                     reply = "Not enough requests from the agents to finalise"
-                    conn.send(reply.encode())
+                    #conn.send(reply.encode())
+            elif data[0] == '5':
+                case_numbr = int(data[1])
+                print("Request to view the solution of Case : ", case_numbr)
+                reply = self.cases[case_numbr].display_solution()
 
 
+            conn.send(reply.encode('utf-8'))
+                
 
             time.sleep(0.1)
 
+    #Listener function to handle the Agents
     def listener(self):
         print("Server is running ... Waiting for connection ")
         for x in range(AGENT_COUNT):
