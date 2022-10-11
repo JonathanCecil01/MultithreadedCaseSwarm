@@ -1,1 +1,9 @@
-Applying AntColony and Particle Swarm Optimization techniques to handle service cases in companies.
+Applying AntColony and Particle Swarm Optimization techniques to handle service cases.
+
+Abstract:
+
+
+How to implement the code:
+1. Run the server program on a terminal
+2. On the agent system run the client program.
+3.Follow the instructions given in the terminal output and the format to ge the desired output
