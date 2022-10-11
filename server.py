@@ -11,7 +11,7 @@ BUFF_SIZE = 1024
 FINALISE_COUNT =0
 CHOICE_MESSAGE = ""
 
-PORT = 3454
+PORT = 34544
 
 lock = threading.Lock()
 
