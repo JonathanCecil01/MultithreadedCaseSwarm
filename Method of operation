@@ -1,0 +1,5 @@
+Step1 : Run the server program on the server
+Step2 : Run the client program on the cleint after modifying the appropriate host 
+Step3 : Follow the instructions in the client side to add a solution or a suggestion, to update the pheromone strength and to finalise a case
+Step4 : Enter 2X to view the update in the case X from all Agents
+Step5 : A plotly window will be updated on every iteration  
