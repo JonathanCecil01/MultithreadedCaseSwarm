@@ -65,7 +65,7 @@ class Server:
             elif data[0] == '2': #view steps
                 print("request to view step suggestions")
                 case_numbr = int(data[1])
-                reply = str(self.cases[case_numbr].display_step_in_choice())
+                reply = "2 : "+ str(self.cases[case_numbr].display_step_in_choice())
                 
                 #conn.send(reply.encode('utf-8'))
 
@@ -95,6 +95,7 @@ class Server:
             elif data[0] == '5':
                 case_numbr = int(data[1])
                 print("Request to view the solution of Case : ", case_numbr)
+                #if self.cases[case_numbr] ==
                 reply = self.cases[case_numbr].display_solution()
 
 

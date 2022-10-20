@@ -72,8 +72,8 @@ class Case:
         count =0
         reply = "Case ID : "+str(self.case_id)+" Step ID : "+str(self.final_step.step_id)+" Suggestions\n"
         for i in self.final_step.suggestions:
-            reply+="Suggestion "+str(count)+" : "+str(i.data)+"\n"
-            reply+="Pheromone Strength : "+str(i.pheromone_level)+"\n"
+            reply+="Suggestion "+str(count)+" : "+str(i.data)#+"\n"
+            reply+="Pheromone Strength : "+str(i.pheromone_level)+" "
             count+=1
         return reply
     
